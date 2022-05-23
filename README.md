@@ -23,3 +23,23 @@ In the case of a request that goes beyond end of the buffer, your implementation
 5. Each device can be opened concurrently and therefore can be accessed for read, write, lseek, and ioctl concurrently. It is your responsibility to provide appropriate synchronization to prevent race conditions.
 
 6. All the resources (including the ramdisk, the device structures, and device nodes) should be recycled/freed at the time of unloading your device driver module.
+
+Instructions on how the module will be tested :
+
+Copy the files char_driver.c, Makefile and userapp.c to a virtual linux machine
+and follow the following steps:
+
+1) Compile driver module : $ make
+
+2) Load module : $ sudo insmod char_driver.ko NUM_DEVICES=<num_devices>
+or use : sudo insmod char_driver.ko
+
+3) Test driver :
+	1) Compile userapp : $ make app
+	2) Run userapp : $ sudo ./userapp <device_number>			
+		where device_number identifies the id number of the device to be tested.   
+
+	Note : userapp has to be executed with sudo privilege as the device files
+		   in /dev/ are created in the driver with root privileges.
+		   
+4) Unload module : $ sudo rmmod char_driver
